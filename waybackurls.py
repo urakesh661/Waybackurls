@@ -25,18 +25,14 @@ def wayback_data(domain):
     getUrl = json.loads(dataDumps)
     waybackUrls = [waybackUrl[0] for waybackUrl in getUrl]
     waybackUrls.pop(0)
-    waybackUrls = [ext for ext in waybackUrls if all(ignore not in ext for ignore in extIgnore)]
+    waybackUrls = [url for url in waybackUrls if all(ignore not in url for ignore in extIgnore)]
 
-    for url in waybackUrls:
+    for uri in waybackUrls:
         try:
-            urlResponse = requests.get(url)
-            print(url, urlResponse.status_code)
-        except requests.exceptions.ConnectionError as connErr:
-            print("Connection Error", connErr)
-        except requests.exceptions.Timeout as timeOut:
-            print("Connection Error", timeOut)
-        except requests.exceptions.InvalidURL as invalidUrl:
-            print("Connection Error", invalidUrl)
+            urlResponse = requests.get(uri)
+            print(uri, "      ", urlResponse.status_code)
+        except requests.exceptions.RequestException as reqErr:
+            print("Error occurred during url access", uri, type(reqErr))
 
 
 wayback_data(domain)
